@@ -13,3 +13,5 @@ tensorflow==1.14
 scikit-learn
 beautifulsoup4
 sqlalchemy==1.4.22
+xmltodict
+opendartreader

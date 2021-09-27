@@ -37,6 +37,15 @@ class Service:
         Service.model = make_model([1, self.config.WINDOW_SIZE, len(self.config.scale_cols)], dropout=0.0)
         Service.model.load_weights(self.config.WEIGHT_FILE)
 
+    def get_today(self, symbol):
+        df = fdr.DataReader(symbol, datetime.today().date() + timedelta(days=-10))
+        print(df)
+        fdr_data = dict()
+        for e in df.keys():
+            if e == 'Change': continue
+            fdr_data[e] = int(df[e].values[-1])
+
+        return fdr_data
 
     def predict(self, symbol):
         WINSIZE = self.config.WINDOW_SIZE
@@ -98,6 +107,8 @@ class Service:
                 predict_stock = np.append(predict_stock, test_feature[0][WINSIZE + i][0])
 
         return predict_stock
+
+
 
 
     def pre_processing(self, real):

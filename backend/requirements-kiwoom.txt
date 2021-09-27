@@ -1,0 +1,13 @@
+pandas
+numpy
+cython
+scipy
+pymysql
+pyqt5==5.13
+beautifulsoup4
+pykiwoom
+sqlalchemy==1.4.22
+dataclasses
+async-exit-stack
+async-generator
+pywin32
