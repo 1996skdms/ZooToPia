@@ -54,7 +54,7 @@ export default {
     text-align:center;
     float:center;
     padding-bottom: 15px;
-    border-bottom:rgb(185, 178, 178) 1px solid;
+    border-bottom:rgb(107, 156, 179) 1px solid;
 }
 .stock_info>ul>li:not(:first-child){
     padding-top: 10px;

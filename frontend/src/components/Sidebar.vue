@@ -57,7 +57,7 @@ export default {
 .mouse-on:hover{
     cursor: pointer; 
     color:#fff; 
-    background-color:#5fa2db;  
+    background-color:#4994d6;  
     font-size:1em;
 }
 
@@ -91,7 +91,8 @@ border-right:1px solid #e5e5e5;
 position:absolute;
 top:0;
 bottom:0;
-height:200%;
+height:150%;
+flex-grow: 1;
 left:0;
 width:60px;
 overflow:hidden;
@@ -116,7 +117,7 @@ position:relative;
 display:table;
 border-collapse:collapse;
 border-spacing:0;
-color:rgb(202, 197, 197);
+color:rgb(120, 136, 155);
 font-family: arial;
 font-size: 14px;
 text-decoration:none;

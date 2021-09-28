@@ -6,8 +6,9 @@ import xmltodict
 import json
 from bs4 import BeautifulSoup
 import OpenDartReader
+import socket
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, WebSocket
 from sqlalchemy.orm import Session
 
 from ..config.lstm_model import Config
@@ -19,11 +20,16 @@ from ..database.conn import db
 from ..schema.predict import Predict
 from ..service.stock_service import stock_service
 from ..service.dart_service import dart_service
+from ..service.kiwoom_service import k_win
 
 router = APIRouter()
 
+host = "127.0.0.1"
+port = 4000
+
 url = 'https://opendart.fss.or.kr/api/corpCode.xml'
 api_key = '5f7647c213c1aa874a889ff66a791412bc1020b7'
+
 
 @router.get("/symbol", response_model=stock.Stock)
 async def get_stock_profile(name: str, db: Session = Depends(db.get_db)):
@@ -59,7 +65,7 @@ async def get_today(symbol: str):
         handler.code(404)
 
     today = stock_service.get_today(symbol)
-    print(today)
+    print("종목 금일 데이터: ", today)
 
     return today
 
@@ -73,6 +79,50 @@ async def get_financial_info(name: str, db: Session = Depends(db.get_db)):
     return dart_service.financial_info(dart, stock_profile.symbol)
 
 
+# Client와 Socket 연결하기
+@router.websocket("/hoga/{symbol}")
+async def get_hoga(symbol: str, client_socket: WebSocket, db: Session = Depends(db.get_db)):
+    print("symbol : ", symbol)
+    await client_socket.accept()
+
+    if symbol is None:
+        handler.code(404)
+
+    # Kiwoom API와 소켓 통신 만들기
+    msg = dict()
+    msg['symbol'] = str(symbol)
+    msg['method'] = "get_hoga"
+    byte_msg = json.dumps(msg, indent=2).encode('utf-8')
+
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    server_socket.connect((host, port))
+    server_socket.sendall(byte_msg)
+    print("socket Init")
+    cnt = 0
+    while True:
+        if cnt > 10:
+            break
+        cnt += 1
+        print("Server: 프로그램에 소켓 통신 요청", cnt, "번째")
+        ask, bid = k_win.getTenTimeHoga(server_socket)
+
+        if len(ask) == 0:
+            print("Server: 호가 정보 없음.")
+            break
+
+        print("Server: 프론트로 호가 정보 전송 전")
+        try:
+            await client_socket.send_json(ask)
+            await client_socket.send_json(bid)
+            print("Server: 프론트로 호가 정보 전송 완료")
+        except:
+            break
+
+
+    print("서버 소켓 닫음")
+    await client_socket.close()
+    server_socket.close()
 
 
 

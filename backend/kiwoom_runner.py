@@ -65,7 +65,7 @@ class MyWindow(QMainWindow):
                     byte_msg = json.dumps(self.bid[req_decode['symbol']], indent=2).encode('utf-8')
                     client_socket.send(byte_msg)
                 except Exception as e:
-                    print("서버 소켓 닫음.")
+                    print("Program: 소켓 닫음.")
                     self.removeTenTimeHoga(req_decode['symbol'])
                     client_socket.close()
                     break
@@ -80,9 +80,9 @@ class MyWindow(QMainWindow):
         server_socket.bind((host, port))
         server_socket.listen(1000)
         while True:
-            print("대기")
+            print("Program: 소켓 연결 대기")
             client_socket, addr = server_socket.accept()
-            print("소켓 연결 요청 허가")
+            print("Program: 소켓 연결 요청 허가")
             t = threading.Thread(target=self.handle_client, args=(client_socket, addr))
             t.daemon = True                 # 데몬 프로세스로 실행 ( 부모가 종료되면 함께 종료 )
             t.start()

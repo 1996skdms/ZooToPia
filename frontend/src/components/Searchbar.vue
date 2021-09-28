@@ -38,7 +38,7 @@ export default {
 <style>
 
 .left-pad{
-    position:absolute;
+    position: fixed;
     width: 100%;
     padding-top:50px;
     padding-left: 100px;

@@ -5,7 +5,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from root.config.database import conf
 from root.database.conn import db
-from root.routers import index_router, stock
+from root.routers import stock
 
 # models.Base.metadata.create_all(bind=engine)
 

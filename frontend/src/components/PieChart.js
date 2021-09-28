@@ -20,11 +20,6 @@ export default {
       chartData: [this.bid, this.ask]  
     }
   },
-  // computed: {
-  //   chartData: function () {
-  //     return this.data;
-  //   }
-  // },
   methods: {
     renderPieChart: function () {
       console.log("render change:", this.chartData)
@@ -33,7 +28,10 @@ export default {
         datasets: [
           {
             label: "Data",
-            backgroundColor: ["#E46651", "#00D8FF"],
+            backgroundColor: [
+              "rgba(235, 10, 10, 0.6)",
+              "rgba(54, 162, 235, 0.6)",
+            ],
             data: [this.chartData[0], this.chartData[1]]
           }
         ]

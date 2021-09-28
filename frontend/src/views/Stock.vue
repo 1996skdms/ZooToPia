@@ -10,62 +10,72 @@
             
         </div>
         <div v-else>
-            <div class="row">
-                <div class="stock_remark_title col-md-8">주가</div>
-                <div class="stock_remark col-md-7">of {{now}} AM</div>
-                <div class="stock_remark col-md-3" style="padding-left:50px;">
-                    <button class="duration_button" @click="setDuration(0)">1년</button>
-                    <button class="duration_button" @click="setDuration(1)">3개월</button>
-                    <button class="duration_button" @click="setDuration(2)">1달</button>
-                    <button class="duration_button" @click="setDuration(3)">2주</button>
+            <div class="row outer_box">
+                <div class="row">
+                    <div class="stock_remark_title col-md-8">주가</div>
+                    <div class="stock_remark col-md-7">of {{now}} AM</div>
+                    <div class="stock_remark col-md-3" style="padding-left:50px;">
+                        <button class="duration_button" @click="setDuration(0)">1년</button>
+                        <button class="duration_button" @click="setDuration(1)">3개월</button>
+                        <button class="duration_button" @click="setDuration(2)">1달</button>
+                        <button class="duration_button" @click="setDuration(3)">2주</button>
+                    </div>
                 </div>
+                <div class="row stock_chart">
+                    <LineChart :height="400" class="col-md-8" :chart-data="datacollection"></LineChart>
+                    <StockInfo v-bind:stockToday="stockToday"></StockInfo>
+                </div>
+
             </div>
-            <div class="row stock_chart">
-                <LineChart :height="400" class="col-md-8" :chart-data="datacollection"></LineChart>
-                <StockInfo v-bind:stockToday="stockToday"></StockInfo>
-            </div>
-            <div class="row hoga_stage">
+            
+            <div class="row outer_box" style="margin-top:50px; !important;">
+                <div class="row hoga_stage">
                 <div class="row col-md-3">
                     <HogaChart :ask="pieChartAsk" :bid="pieChartBid"></HogaChart>
                 </div>
                 <Hoga class="col-md-9" v-bind:askPrice="askPrice" :bidPrice="bidPrice" 
                 :askVolume="askVolume" :bidVolume="bidVolume"></Hoga>
-            </div>
-            <div class="row finance_info">
-                재무정보
-            </div>
-            <div class="row stock_remark col-md-7" style="top:240px;">of {{searchWord}}</div>
-            <div> &nbsp;</div>
-            <div class="row finance_info col-md-12">
-                <div class="col-md-3">
-                    <div class="finance_summary">매출액(연결)</div>
-                    <div class="finance_summary">매출액(별도)</div>
                 </div>
-                <div class="col-md-3">
-                    <div class="finance_summary">영업이익</div>
-                    <div class="finance_summary">자산</div>
-                </div>
-                <div class="col-md-3">
-                    <div class="finance_summary">당기순이익</div>
-                    <div class="finance_summary">뭐할까</div>
-                </div>
-                <div class="col-md-3">
-                    <div class="finance_summary">설립일</div>
-                    <div class="finance_summary">주소</div>
-                </div>
-                
             </div>
-            <div class="row bar_chart">
-                <BarChart class="col-md-2" :height="250" :financeData="finance.linked_sales" :label="labels[0]"></BarChart>          <!--  :barData="finance" -->
-                <div class="col-md-1"></div>
-                <BarChart class="col-md-2" :height="250" :financeData="finance.separate_sales"  :label="labels[1]"></BarChart>
-                <div class="col-md-1"></div>
-                <BarChart class="col-md-2" :height="250" :financeData="finance.revenue"  :label="labels[2]"></BarChart>
-                <div class="col-md-1"></div>
-                <BarChart class="col-md-2" :height="250" :financeData="finance.asset"  :label="labels[3]"></BarChart>
+
+            <div class="row outer_box" style="margin-top:50px; !important;">
+                <div class="row finance_info">
+                    기업정보
+                </div>
+                <div class="row stock_remark col-md-7">of {{searchWord}}</div>
+                <div> &nbsp;</div>
+
+                <FinanceInfo class="finance_info col-md-12" :labels="labels" :a="finance_summary.linkedSales"
+                                :b="finance_summary.separateSales"  :c="finance_summary.revenue"
+                                :d="finance_summary.asset"  :e="finance_summary.netIncome" 
+                                :f="finance_summary.odds"  :g="finance_summary.liability"
+                                :h="finance_summary.name"></FinanceInfo>
+
+                <div class="row bar_chart">
+                    <div class="col-md-3">
+                        <div class="col-md-1"></div>
+                        <BarChart class="col-md-9" :height="250" :financeData="finance.linked_sales" :label="labels[0]"></BarChart>  
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="col-md-1"></div>
+                        <BarChart class="col-md-9" :height="250" :financeData="finance.separate_sales"  :label="labels[1]"></BarChart> 
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="col-md-1"></div>
+                        <BarChart class="col-md-9" :height="250" :financeData="finance.revenue" :label="labels[2]"></BarChart>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="col-md-1"></div>
+                        <BarChart class="col-md-9" :height="250" :financeData="finance.asset"  :label="labels[3]"></BarChart>
+                        <div class="col-md-1"></div>
+                    </div>
+                </div>
             </div>
+            
         </div>
-        
     </div>
 </template>
 
@@ -78,6 +88,7 @@ import StockInfo from "../components/StockInfo.vue"
 import HogaChart from "../components/HogaChart.vue"
 import Hoga from "../components/Hoga.vue"
 import BarChart from "../components/BarChart.js"
+import FinanceInfo from "../components/FinanceInfo.vue"
 
 export default {
     name: "Stock",
@@ -89,13 +100,14 @@ export default {
         HogaChart,
         Hoga,
         BarChart,
+        FinanceInfo,
     },
     data() {
         return {
             socket: null,
             status: "",
 
-            searchWord: "",
+            searchWord: "삼성전자",
             stockProfile: [],
 
             duration: 1,            // 0: 1년, 1: 3개월, 2: 1개월, 3: 2주
@@ -110,22 +122,17 @@ export default {
             bidVolume: [],
 
             finance: [],
-            labels: ['매출액(연결)', '매출액(별도)', '영업이익(연결)', '자산'],
+            labels: ['매출액(연결)', '매출액(별도)', '영업이익(연결)', '자산',
+                    '당기순이익', '배당률', '부채', '기업명'],
+            finance_summary: {},
 
-            
             datacollection: {
                 labels: ["week 1", "week 2", "week 3", "week 4", "week 5", "week 6", "week 7", "week 8", "week 9", "week 10"],
                 datasets: [
                 {
-                    data: [86, 114, 106, 106, 107, 111, 133, 221, 783, 2478],
-                    label: "Africa",
+                    data: [30550, 31050, 30900, 32200, 31900, 32400, 33250, 32450, 32000, 32450],
+                    label: "KT",
                     borderColor: "#3e95cd",
-                    fill: false
-                },
-                {
-                    data: [282, 350, 411, 502, 635, 809, 947, 1402, 3700, 1267],
-                    label: "Asia",
-                    borderColor: "#8e5ea2",
                     fill: false
                 },
                 ]
@@ -143,36 +150,72 @@ export default {
             return res.data;
         },
         async searchStock(searchWord){
-            this.searchWord = searchWord
-
             let data = await this.getStockProfile(searchWord)
+            this.searchWord = data.NAME
+
             let lastIdx = this.stockProfile.length
             this.stockProfile.push(data)
 
             this.socketConnect(lastIdx)
 
-            await this.financeInfo(searchWord)
+            this.getToday(this.stockProfile[lastIdx].symbol)
+
+            await this.financeInfo(data.NAME)
         },
-        socketConnect(idx){
-            console.log(this.stockProfile[idx].symbol)
-            this.socket = new WebSocket("ws://localhost:8080/kiwoom/hoga/" + this.stockProfile[idx].symbol)
+        async socketConnect(idx){
+            if(this.socket != null) await this.socket.close()
+
+            // 임시 테스트
+            let data = {
+                price: ["+77300", "+77400", "+77500", "+77600", "+77300", "+77400", "+77500", "+77600", "+77500", "+77600"],
+                volume: [468435,348643,156843,141580, 68435,108643,26843,24158, 56843,158],
+                updown: "bid",
+            }
+            
+            if(data.updown == "bid"){                    
+                this.bidPrice = []
+                this.bidVolume = []
+
+                for(let i=data.price.length - 1; i>=0; i--){
+                    this.bidPrice[this.bidPrice.length] = data.price[i].substring(1,data.price[i].length)
+                }
+                for(let i=data.volume.length - 1; i>=0; i--){
+                    this.bidVolume[this.bidVolume.length] = data.volume[i];
+                }
+            }
+            data = {
+                price: ["-77300", "-77400", "-77500", "-77600", "-77300", "-77400", "-77500", "-77600", "-77500", "-77600"],
+                volume: [257435,25443,62843,12580, 4435,893,6843,458,8403,284],
+                updown: "ask",
+            }
+            if(data.updown == "ask"){
+                this.askPrice = []
+                this.askVolume = []
+
+                data.price.forEach(e => {
+                    this.askPrice[this.askPrice.length] = e.substring(1,e.length)
+                });
+                data.volume.forEach(e => {
+                    this.askVolume[this.askVolume.length] = e
+                });
+            }
+
+
+
+            this.socket = new WebSocket("ws://localhost:8081/stock/hoga/" + this.stockProfile[idx].symbol)
             this.socket.onopen = () => {
                 this.status = "connected";
                 let cnt = 0
                 this.socket.onmessage = ({data}) => {
                     cnt = 1 - cnt
-                    if(cnt % 2 != 0) this.getToday(this.stockProfile[idx].symbol)
+                    if(cnt % 2 != 0) {
+                        this.getToday(this.stockProfile[idx].symbol)
+                        console.log("내부")
+                    }
                     // console.log(data)
-                    // data = {
-                    //     price: ["+77300", "+77400", "+77500", "+77600", "+77300", "+77400", "+77500", "+77600", "+77500", "+77600"],
-                    //     volume: [468435,8643,6843,1580, 468435,8643,6843,158, 6843,158]
-                    //     }
-                    
+
                     data = JSON.parse(data)
-                    // data = {
-                    //     price: ["-77300", "-77400", "-77500", "-77600", "-77300", "-77400", "-77500", "-77600", "-77500", "-77600"],
-                    //     volume: [468435,8643,6843,1580, 468435,8643,6843,158, 6843,158]
-                    //     }
+                    
                     if(data.updown == "bid"){                    
                         this.bidPrice = []
                         this.bidVolume = []
@@ -202,7 +245,7 @@ export default {
             let res = await stock.getStockToday(symbol)
             
             this.stockToday = res.data
-            console.log(this.stockToday)
+            console.log("종목 금일 정보: ", this.stockToday)
         },
         async financeInfo(searchWord){
             let res = await stock.getFinancialInfo(searchWord)
@@ -210,17 +253,41 @@ export default {
             this.finance = {}
             this.finance = res.data
 
-            console.log(this.finance)
+            let lastYear = Number(this.$moment(new Date()).format("YYYY")) - 1
+            this.finance_summary.linkedSales = this.convertUnit(this.finance.linked_sales[lastYear])
+            this.finance_summary.separateSales = this.convertUnit(this.finance.separate_sales[lastYear])
+            this.finance_summary.revenue = this.convertUnit(this.finance.revenue[lastYear])
+            this.finance_summary.asset = this.convertUnit(this.finance.asset[lastYear])
+            this.finance_summary.netIncome = this.convertUnit(this.finance.net_income[lastYear])
+            this.finance_summary.liability = this.convertUnit(this.finance.liability[lastYear])
+            this.finance_summary.odds = this.finance.odds + '%'
+            this.finance_summary.odds_cash = this.finance.odds_cash + '원'
+            this.finance_summary.name = searchWord
+
+            console.log("Finance Summary: ", this.finance_summary)
             
         },
         setDuration(dur){
             this.duration = dur
+        },
+        convertUnit(cash){
+            let jo = ""
+            let uk = ""
+            if(cash >= 1000000000000){
+                jo = Math.floor(cash / 1000000000000) + '조'
+            }
+            uk = (Math.round((cash % 1000000000000) / 10000000) /10 )+ '억'
+
+            return jo + ' ' + uk
         }
     },
     mounted(){
         setInterval(() => {
             this.now = this.$moment(new Date()).format("DD MMM YYYY HH:mm:ss")
         }, 1000)
+
+        this.searchStock("삼성전자") // 테스트
+
     },
     watch:{
         rateOfBidVolume(){
@@ -261,9 +328,18 @@ export default {
     left: 0px;
 }
 
+.outer_box{
+    margin-top: 130px;
+    background-color: rgb(245, 250, 248);
+    border-radius: 0 15% 15% 0;
+    border: white 1px solid;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
 .stock_chart{
     position:relative;
-    top: 130px;
+    /* top: 130px; */
     left: 100px;
 }
 
@@ -276,19 +352,19 @@ export default {
     list-style-type: none;
     margin-left: -40px;
     margin-right:60px;
-    color:rgb(29, 83, 85);
+    color:rgb(19, 60, 61);
 }
 
 .stock_remark_title{
     position:relative;
-    top:120px;
+    /* top:120px; */
     padding-left:120px;
     font-size:1.4em;
 }
 
 .stock_remark{
     position:relative;
-    top:120px;
+    /* top:120px; */
     padding-left:120px;
     font-size:0.5em;
 }
@@ -310,7 +386,7 @@ export default {
 .hoga_stage{
     position: relative;
     padding-left: 120px;
-    top: 180px;
+    /* top: 180px; */
 }
 
 .sell_amount{
@@ -324,20 +400,22 @@ export default {
 .finance_info{
     position: relative;
     padding-left: 120px;
-    top: 240px;
     font-size:1.4em;
 }
 
 .finance_summary{
     position: relative;
     text-align: left;
-    font-size: 0.7em;
+    font-size: 0.6em;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: #bcc9c7b7 1px solid;
 }
 
 .bar_chart{
     position: relative;
     padding-left: 120px;
-    padding-top: 280px;
+    padding-top: 40px;
 }
 
 </style>

@@ -32,12 +32,18 @@ export default {
                 labels: [String(year), String(year+1), String(year+2), String(year+3)],
                 datasets: [
                 {
-                    label: this.label + ": " + String(Math.round(this.financeData[year+3] / divide) / 100) + unit,
+                    label: this.label + ": 단위(" + unit + ")",
                     data: [
                         Math.round(this.financeData[year] / divide) / 100,
                         Math.round(this.financeData[year+1] / divide) / 100,
                         Math.round(this.financeData[year+2] / divide) / 100,
                         Math.round(this.financeData[year+3] / divide) / 100,
+                    ],
+                    backgroundColor: [
+                        "rgba(54, 162, 235, 0.6)",
+                        "rgba(54, 162, 235, 0.6)",
+                        "rgba(54, 162, 235, 0.6)",
+                        "rgba(54, 162, 235, 1)",
                     ]
                 }, 
                 ]
