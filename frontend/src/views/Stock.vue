@@ -12,7 +12,7 @@
         <div v-else>
             <div class="row outer_box">
                 <div class="row">
-                    <div class="stock_remark_title col-md-8">주가</div>
+                    <div class="stock_remark_title_s col-md-8">주가</div>
                     <div class="stock_remark col-md-7">of {{now}} AM</div>
                     <div class="stock_remark col-md-3" style="padding-left:50px;">
                         <button class="duration_button" @click="setDuration(0)">3년</button>
@@ -335,19 +335,19 @@ export default {
     left: 100px;
 }
 
-.stock_info{
+.stock_info_s{
     padding-top:30px;
     padding-right:100px;
 }
 
-.stock_info>ul{
+.stock_info_s>ul{
     list-style-type: none;
     margin-left: -40px;
     margin-right:60px;
     color:rgb(19, 60, 61);
 }
 
-.stock_remark_title{
+.stock_remark_title_s{
     position:relative;
     /* top:120px; */
     padding-left:120px;
