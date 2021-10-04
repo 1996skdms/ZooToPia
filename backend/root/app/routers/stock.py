@@ -21,8 +21,8 @@ from ..service.kiwoom_service import k_win
 
 router = APIRouter()
 
-host = "3.37.16.32"
-port = 4000
+host = "3.37.16.32"  # 3.37.16.32
+port = 4500
 
 url = 'https://opendart.fss.or.kr/api/corpCode.xml'
 api_key = '5f7647c213c1aa874a889ff66a791412bc1020b7'
@@ -91,7 +91,7 @@ async def get_financial_info(name: str, db: Session = Depends(db.get_db)):
 async def get_hoga(symbol: str, client_socket: WebSocket, db: Session = Depends(db.get_db)):
     print("symbol : ", symbol)
     await client_socket.accept()
-
+    print("Front Client Socket accepted")
     if symbol is None:
         handler.code(404)
 
@@ -102,8 +102,9 @@ async def get_hoga(symbol: str, client_socket: WebSocket, db: Session = Depends(
     byte_msg = json.dumps(msg, indent=2).encode('utf-8')
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    server_socket.connect((host, port))
+    print("Server socket connection waiting:", host, port)
+    server_socket.connect((host, port))               #, port
+    print("Server socket connected")
     server_socket.sendall(byte_msg)
     print("socket Init")
     cnt = 0
