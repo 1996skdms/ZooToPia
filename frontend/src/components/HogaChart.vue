@@ -12,7 +12,7 @@
             매수 <div style="font-size: 1.8em;">{{bid}}%</div>
         </div>
         <div class="col-md-4 sell_amount">
-            매도 <div style="font-size: 1.8em;">{{ask}}%</div>
+            매도 <div style="font-size: 1.8em; ">{{ask}}%</div>
         </div>
         <div class="col-md-2"></div>
     </div>

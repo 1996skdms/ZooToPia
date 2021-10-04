@@ -1,4 +1,3 @@
-from datetime import datetime, timedelta
 import requests
 import zipfile
 from io import BytesIO
@@ -11,20 +10,18 @@ import socket
 from fastapi import APIRouter, Depends, WebSocket
 from sqlalchemy.orm import Session
 
-from ..config.lstm_model import Config
 from ..database import stock_crud
 from ..exception.handler import handler
 from ..model import opendart
 from ..schema import stock
 from ..database.conn import db
-from ..schema.predict import Predict
 from ..service.stock_service import stock_service
 from ..service.dart_service import dart_service
 from ..service.kiwoom_service import k_win
 
 router = APIRouter()
 
-host = "127.0.0.1"
+host = "3.37.16.32"
 port = 4000
 
 url = 'https://opendart.fss.or.kr/api/corpCode.xml'
@@ -42,20 +39,30 @@ async def get_stock_profile(name: str, db: Session = Depends(db.get_db)):
 
 
 @router.get("/predict")
-async def stock_predict(symbol: str):
-    if symbol is None: handler.code(404)
-    predict_stock = stock_service.predict(symbol)
+async def stock_predict(name: str):
+    if name is None: handler.code(404)
+    last_and_predict_stock, predict_stock = stock_service.predict(name)
+    print("predict_stock: ", len(predict_stock))
+    print(predict_stock)
 
-    conf = Config()
-    pred = Predict()
+    day = []
     ret = dict()
 
     for i, e in enumerate(predict_stock):
-        pred.price.append(int(e))
-        pred.day.append(datetime.today().date() + timedelta(conf.FORECAST - len(predict_stock) + i + 1))
+        day.append('D+' + str(i+1))
 
-    ret['price'] = pred.price
-    ret['day'] = pred.day
+    ret['close'] = predict_stock
+    ret['date'] = day
+    return ret
+
+
+@router.get("/last")
+async def get_last_price(symbol: str, duration: int):
+    date, close = stock_service.get_last_price(symbol, duration)
+
+    ret = dict()
+    ret['date'] = date
+    ret['close'] = close
     return ret
 
 

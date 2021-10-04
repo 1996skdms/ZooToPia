@@ -25,7 +25,6 @@ class Dart:
             df_index = pd.concat([df_index, df], axis=1)
 
         linked_sales, separate_sales, revenue, asset, net_income, liability = {}, {}, {}, {}, {}, {}
-        print(df_index)
         now_year = datetime.today().date().year
 
         for i, col in enumerate(df_index['account_nm']):
@@ -80,8 +79,6 @@ class Dart:
                     else:
                         separate_sales[str(last_year)] = 0
                 break
-
-
 
         ret = {'linked_sales': linked_sales, 'separate_sales': separate_sales, 'revenue': revenue, 'asset': asset, 'net_income': net_income, 'liability': liability}
 

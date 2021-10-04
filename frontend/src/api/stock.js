@@ -28,5 +28,24 @@ export default {
                 name: stockName,
             },
         })
-    }
+    },
+    getStockGraph(symbol, duration) {
+        return _axios({
+            url: `/stock/last`,
+            method: 'get',
+            params: {
+                symbol: symbol,
+                duration: duration,
+            },
+        })
+    },
+    getstockPredict(stockName) {
+        return _axios({
+            url: `/stock/predict`,
+            method: 'get',
+            params: {
+                name: stockName
+            },
+        })
+    },
 }

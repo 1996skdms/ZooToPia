@@ -11,17 +11,30 @@ export default {
                 yAxes: [
                     {
                         ticks: {
-                            beginAtZero: true
+                            beginAtZero: false
                         }
                     }]
             },
             responsive: true,
             maintainAspectRatio: false,
+            outerHeight: 400,
         })
     },
     watch: {
         chartData: function() {
-            
+            this.renderChart(this.chartData, {
+                scales: {
+                    yAxes: [
+                        {
+                            ticks: {
+                                beginAtZero: false
+                            }
+                        }]
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                outerHeight: 400,
+            })
         }
     }
 }

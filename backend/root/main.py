@@ -3,11 +3,9 @@ from dataclasses import asdict
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from root.config.database import conf
-from root.database.conn import db
-from root.routers import stock
-
-# models.Base.metadata.create_all(bind=engine)
+from app.config.database import conf
+from app.database.conn import db
+from app.routers import stock
 
 
 def init_app():
@@ -17,9 +15,7 @@ def init_app():
     conf_dict = asdict(c)
     db.init_app(app, **conf_dict)
 
-    origins = [
-        "http://localhost:5000",        # Frontend Origin
-    ]
+    origins = ["*"]       # Frontend Origin
 
     app.add_middleware(
         CORSMiddleware,
@@ -32,7 +28,6 @@ def init_app():
     )
 
     # 라우터
-    # app.include_router(index_router.router, prefix='/api', tags=['users'])
     app.include_router(stock.router, prefix='/stock', tags=['stocks'])
 
     return app
@@ -41,4 +36,7 @@ def init_app():
 app = init_app()
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8081, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)
+
+# gunicorn -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:8081 --workers 4 --daemon
+# docker run -itd -p 8081:8081 jinwoo6612/stocktest
