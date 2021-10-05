@@ -11,7 +11,7 @@ import pandas as pd
 import FinanceDataReader as fdr
 
 from ..exception.handler import handler
-
+import tensorflow as tf
 import pymysql
 
 mysql_db = pymysql.connect(
@@ -22,6 +22,8 @@ mysql_db = pymysql.connect(
     db="bigdata",
     charset="utf8"
 )
+my_devices = tf.config.experimental.list_physical_devices(device_type='CPU')
+tf.config.experimental.set_visible_devices(devices= my_devices, device_type='CPU')
 
 class Service:
     model3 = None
@@ -62,7 +64,7 @@ class Service:
 
         return date, close
 
-    def predict(self, stock_name='삼성전자'):
+    def predict(self, symbol):
         def make_test_dataset(data, window_size):
             feature_list = []
             for k in range(len(data) - window_size + 1):
@@ -70,13 +72,13 @@ class Service:
             return np.array(feature_list)
 
         cursor = mysql_db.cursor(pymysql.cursors.DictCursor)
-        sql = "select * from stock where name like '" + stock_name + "%'"
+        sql = "select * from stock where symbol like '" + symbol + "%'"
         cursor.execute(sql)
         stock_meta_data = cursor.fetchall()[0]
 
         model = None
         scale_cols = None
-        if stock_name in ['삼성전자', '카카오', '셀트리온']:           # 뉴스 데이터 분석 포함 예측 모델 사용
+        if stock_meta_data['NAME'] in ['005930', '035720', '068270']:           # 뉴스 데이터 분석 포함 예측 모델 사용
             model = self.model3
             scale_cols = self.config.scale_cols4
         else:
@@ -90,18 +92,20 @@ class Service:
 
         if len(df) <= self.config.WINDOW_SIZE + self.config.FORECAST: return []
 
-        real = df[-self.config.WINDOW_SIZE - predict_from_prev_day:]
+        real = df[-self.config.WINDOW_SIZE - predict_from_prev_day: - predict_from_prev_day]
+        if predict_from_prev_day == 0: real = df[-self.config.WINDOW_SIZE - predict_from_prev_day:]
         real_compare = df[-self.config.WINDOW_SIZE - predict_from_prev_day:]
 
         search_start_date = datetime.today().date() - timedelta(days=self.config.WINDOW_SIZE * 5)
-        sql = "select date_format(news_analysis.date, '%Y-%m-%d') AS date, score" \
-              " FROM news_analysis" \
-              " WHERE news_analysis.NAME LIKE '" + str(
-            stock_meta_data['NAME']) + "' AND news_analysis.date >= DATE('" + str(search_start_date) + "') " \
-                                                                                                       " ORDER BY date"
+        sql = "select date_format(date, '%Y-%m-%d') AS date, score" \
+              " FROM stock_posi_negative" \
+              " WHERE stock_posi_negative.code LIKE '" + str(
+              stock_meta_data['symbol']) + "' AND date >= DATE('" + str(search_start_date) + "') " \
+              " ORDER BY date"
 
         cursor.execute(sql)
         score_df = cursor.fetchall()[-self.config.WINDOW_SIZE - predict_from_prev_day:]
+        print(score_df)
 
         tmp_df = []
         for e in real.index:

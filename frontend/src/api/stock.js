@@ -39,12 +39,39 @@ export default {
             },
         })
     },
-    getstockPredict(stockName) {
+    getstockPredict(symbol) {
         return _axios({
             url: `/stock/predict`,
             method: 'get',
             params: {
-                name: stockName
+                symbol: symbol
+            },
+        })
+    },
+    getRealTimeHoga(symbol) {
+        return _axios({
+            url: `/stock/realtime_hoga`,
+            method: 'get',
+            params: {
+                symbol: symbol,
+            },
+        })
+    },
+    registerHoga(symbol) {
+        return _axios({
+            url: `/stock/register_hoga`,
+            method: 'post',
+            params: {
+                symbol: symbol,
+            },
+        })
+    },
+    removeHoga(symbol) {
+        return _axios({
+            url: `/stock/remove_hoga`,
+            method: 'delete',
+            params: {
+                symbol: symbol,
             },
         })
     },

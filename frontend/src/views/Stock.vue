@@ -109,6 +109,8 @@ export default {
         return {
             socket: null,
             status: "",
+            hogaInterval: null,
+            intervalCheck: "",
 
             searchWord: "",
             stockProfile: {},
@@ -151,11 +153,15 @@ export default {
 
             this.stockProfile = data
 
-            this.socketConnect()
+            // this.socketConnect()
             
             this.stockGraph(this.stockProfile.symbol)
 
             this.getToday(this.stockProfile.symbol)
+
+            await this.removeHoga()
+            await this.registerHoga(this.stockProfile.symbol)
+            this.getHoga(this.stockProfile.symbol)
 
             await this.financeInfo(data.NAME)
         },
@@ -169,7 +175,7 @@ export default {
 
             let res = await stock.getStockGraph(symbol, dur)
             if(this.predict_stock_graph.date == undefined) {
-                await this.stockPredict(this.stockProfile.NAME)
+                await this.stockPredict(this.stockProfile.symbol)
             }
 
             this.stock_graph = {
@@ -183,54 +189,44 @@ export default {
                 },
                 ]
             }
-
         },
-        async stockPredict(name){
-            let res = await stock.getstockPredict(name)
+        async stockPredict(symbol){
+            let res = await stock.getstockPredict(symbol)
             console.log(res)
 
             this.predict_stock_graph.close = res.data.close
             this.predict_stock_graph.date = res.data.date
         },
-        async socketConnect(){
-            if(this.socket != null) await this.socket.close()
+        async registerHoga(symbol){
+            this.intervalCheck = symbol
+            stock.registerHoga(symbol)
+        },
+        async getHoga(symbol){
+            this.hogaInterval = setInterval(() => {
+                if(this.intervalCheck == symbol) this.getRealTimeHogaMethod(symbol)
+                else clearInterval(this.hogaInterval)
+            }, 1500)
+        },
+        async getRealTimeHogaMethod(symbol){
+            let res = await stock.getRealTimeHoga(symbol)
+            console.log(res.data)
 
-            this.socket = new WebSocket("ws://localhost:8080/stock/hoga/" + this.stockProfile.symbol)
-            this.socket.onopen = () => {
-                this.status = "connected";
-                let cnt = 0
-                this.socket.onmessage = ({data}) => {
-                    cnt = 1 - cnt
-                    if(cnt % 2 != 0) {
-                        this.getToday(this.stockProfile.symbol)
-                    }
+            this.bidPrice = []
+            this.bidVolume = []
+            this.askPrice = []
+            this.askVolume = []
 
-                    data = JSON.parse(data)
-                    
-                    if(data.updown == "bid"){                    
-                        this.bidPrice = []
-                        this.bidVolume = []
-
-                        for(let i=data.price.length - 1; i>=0; i--){
-                            this.bidPrice[this.bidPrice.length] = data.price[i].substring(1,data.price[i].length)
-                        }
-                        for(let i=data.volume.length - 1; i>=0; i--){
-                            this.bidVolume[this.bidVolume.length] = data.volume[i];
-                        }
-                    }
-                    else if(data.updown == "ask"){
-                        this.askPrice = []
-                        this.askVolume = []
-
-                        data.price.forEach(e => {
-                            this.askPrice[this.askPrice.length] = e.substring(1,e.length)
-                        });
-                        data.volume.forEach(e => {
-                            this.askVolume[this.askVolume.length] = e
-                        });
-                    }
-                }
-            }
+            res.data.forEach((e) => {
+                this.askPrice[e.ordering - 1] = e.ask_price.substring(1, e.length)
+                this.askVolume[e.ordering - 1] = e.ask_volume
+                this.bidPrice[e.ordering - 1] = e.bid_price.substring(1, e.length)
+                this.bidVolume[e.ordering - 1] = e.bid_volume
+            })
+        },
+        async removeHoga(){
+            if(this.hogaInterval != null) clearInterval(this.hogaInterval)
+            this.intervalCheck = false
+            await stock.removeHoga(this.stockProfile.symbol)
         },
         async getToday(symbol){
             let res = await stock.getStockToday(symbol)
@@ -280,7 +276,7 @@ export default {
             this.now = this.$moment(new Date()).format("DD MMM YYYY HH:mm:ss")
         }, 1000)
 
-        this.searchStock("삼성전자") // 테스트
+        // this.searchStock("삼성전자") // 테스트
 
     },
     watch:{
@@ -301,7 +297,7 @@ export default {
                 sum2 += Math.abs(e)
             })
             let rate = sum / (sum + sum2)
-            if(isNaN(rate)) return 49
+            if(isNaN(rate)) return 0
 
             rate = Math.round(rate * 100)
             return rate

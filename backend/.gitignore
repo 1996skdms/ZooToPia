@@ -20,3 +20,4 @@ venv
 .venv
 docs.zip
 archive.zip
+root/docs_cache
