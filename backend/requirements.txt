@@ -9,6 +9,7 @@ pyqt5==5.13
 finance-datareader
 fastapi[all]
 uvicorn[standard]
+gunicorn
 tensorflow==2.6.0
 scikit-learn
 beautifulsoup4

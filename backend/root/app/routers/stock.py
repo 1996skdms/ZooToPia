@@ -133,13 +133,11 @@ async def get_hoga(symbol: str, client_socket: WebSocket, db: Session = Depends(
     server_socket.close()
 
 
-
-
 # 서비스에 사용하지 않음
 @router.get("/insert_opendart_financial_info")
 def insert_financial_info(db: Session = Depends(db.get_db)):
     corpInfo = None
-    res = requests.get(url, params={'crtfc_key': key})
+    res = requests.get(url, params={'crtfc_key': api_key})
     with zipfile.ZipFile(BytesIO(res.content)) as zf:
         file_list = zf.namelist()
         while len(file_list) > 0:
