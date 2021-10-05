@@ -149,7 +149,7 @@ class News:
         return score_mean
 
     def date_score(self, df):
-        date_mean = math.floor(df[['pubDate', 'score']].groupby('pubDate').mean().reset_index(drop=False))
+        date_mean = df[['pubDate', 'score']].groupby('pubDate').mean().reset_index(drop=False)
         return date_mean
 
     def ratio(self, df):

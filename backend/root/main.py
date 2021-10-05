@@ -26,10 +26,10 @@ def init_app():
         max_age=3600,
     )
 
-    # from app.scheduler import finance_news_scheduler as fns
-    # @app.on_event("startup")
-    # async def run_scheduler():
-    #     fns_sch = fns.Scheduler()
+    from app.scheduler import finance_news_scheduler as fns
+    @app.on_event("startup")
+    async def run_scheduler():
+        fns_sch = fns.Scheduler()
 
 
     # 라우터

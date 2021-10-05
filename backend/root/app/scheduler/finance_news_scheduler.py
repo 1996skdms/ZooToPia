@@ -1,6 +1,6 @@
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from ..service.naver_finance_news_service import finance_news
-from datetime import timedelta
+import requests
+
 class Scheduler:
 
     def __init__(self):
@@ -8,26 +8,21 @@ class Scheduler:
         self.sch.start()
         self.job_id = 'finance news'
 
-        # 23:59(KST) -> 14:59 (UTC)
-        # self.sch.add_job(self.getFinance, 'cron', hour=14, minute=59, second==10, max_instances=1)
+        # 23:50(KST) -> 14:50 (UTC)
+        self.sch.add_job(self.getFinance, 'cron', hour=14, minute=50, second==10, max_instances=1)
 
         # 17:10(KST) -> 8:03 (UTC)
-        self.sch.add_job(self.getFinance, 'cron', hour=17, minute=27, second=10, max_instances=1)
+        # self.sch.add_job(self.getFinance, 'cron', hour=22, minute=19, second=10, max_instances=1)
         # self.sch.add_job(self.getFinance, 'interval', seconds=20, max_instances=1)
 
     async def getFinance(self):
 
-        kakao_df = finance_news.crawler('035720', 1, timedelta(days=1)) # 카카오
-        # celltrion_df = finance_news.crawler('068270', 1, timedelta(days=1)) # 셀트리온
-        # naver_df = finance_news.crawler('035420', 1, timedelta(days=1)) # 네이버
+        # production
+        url = 'http://j5a602.p.ssafy.io:8080/naver/save'
 
-        print(kakao_df)
-        # print(celltrion_df)
-        # print(naver_df)
-
-        # score 구하기
-
-        # 데이터베이스에 넣기
+        # develop
+        # url = 'http://127.0.0.1:8080/naver/hi'
+        r = requests.get(url)
 
 
 
