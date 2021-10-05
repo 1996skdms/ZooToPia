@@ -25,12 +25,8 @@ from ..service.stock_service import stock_service
 from ..service.dart_service import dart_service
 from ..service.kiwoom_service import k_win
 
-# from ..schema.hoga import hoga
-
 router = APIRouter()
 
-host = "3.37.16.32"
-port = 4500
 
 url = 'https://opendart.fss.or.kr/api/corpCode.xml'
 api_key = '5f7647c213c1aa874a889ff66a791412bc1020b7'
@@ -105,31 +101,16 @@ async def get_realtime_hoga(symbol: str, db: Session = Depends(db.get_db)):
 
 # Client가 요청한 종목 실시간 호가 소켓 생성, 종목 등록
 @router.post("/register_hoga")
-async def register_hoga(symbol: str):
-    msg = dict()
-    msg['symbol'] = str(symbol)
-    msg['method'] = "register"
-    byte_msg = json.dumps(msg, indent=2).encode('utf-8')
-
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.connect((host, port))  # , port
-    print("Server socket connected", host, port)
-    server_socket.sendall(byte_msg)
+def register_hoga(symbol: str):
+    k_win.register_hoga(symbol)
 
     return "success"
 
+
 # 실시간 호가 제거
 @router.delete("/remove_hoga")
-async def remove_hoga(symbol: str):
-    msg = dict()
-    msg['symbol'] = str(symbol)
-    msg['method'] = "remove"
-    byte_msg = json.dumps(msg, indent=2).encode('utf-8')
-
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.connect((host, port))  # , port
-    print("Server socket connected", host, port)
-    server_socket.sendall(byte_msg)
+def remove_hoga(symbol: str):
+    k_win.remove_hoga(symbol)
 
     return "success"
 

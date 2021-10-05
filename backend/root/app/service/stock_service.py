@@ -22,8 +22,8 @@ mysql_db = pymysql.connect(
     db="bigdata",
     charset="utf8"
 )
-my_devices = tf.config.experimental.list_physical_devices(device_type='CPU')
-tf.config.experimental.set_visible_devices(devices= my_devices, device_type='CPU')
+my_devices = tf.config.experimental.list_physical_devices(device_type='GPU')
+tf.config.experimental.set_visible_devices(devices= my_devices, device_type='GPU')
 
 class Service:
     model3 = None
@@ -96,17 +96,19 @@ class Service:
         if predict_from_prev_day == 0: real = df[-self.config.WINDOW_SIZE - predict_from_prev_day:]
         real_compare = df[-self.config.WINDOW_SIZE - predict_from_prev_day:]
 
+        print("0")
         search_start_date = datetime.today().date() - timedelta(days=self.config.WINDOW_SIZE * 5)
         sql = "select date_format(date, '%Y-%m-%d') AS date, score" \
               " FROM stock_posi_negative" \
               " WHERE stock_posi_negative.code LIKE '" + str(
               stock_meta_data['symbol']) + "' AND date >= DATE('" + str(search_start_date) + "') " \
               " ORDER BY date"
-
+        print("1")
         cursor.execute(sql)
         score_df = cursor.fetchall()[-self.config.WINDOW_SIZE - predict_from_prev_day:]
         print(score_df)
 
+        print("2")
         tmp_df = []
         for e in real.index:
             flag = False
@@ -129,6 +131,7 @@ class Service:
 
         for i in range(self.config.FORECAST):
             test_input = test_feature[0][i:].reshape(1, self.config.WINDOW_SIZE, len(scale_cols))
+            print(i)
             pred = model.predict(test_input)
 
             test_feature = np.insert(test_feature, self.config.WINDOW_SIZE + i, pred[0], axis=1)
