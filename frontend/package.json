@@ -15,8 +15,12 @@
     "sass-loader": "^7.3.1",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.1",
+    "vue-class-component": "^7.2.6",
     "vue-moment": "^4.1.0",
-    "vue-router": "^3.2.0"
+    "vue-property-decorator": "^9.1.2",
+    "vue-router": "^3.2.0",
+    "vue-wordcloud": "^1.1.1",
+    "vuewordcloud": "^18.7.12"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
