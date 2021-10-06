@@ -36,7 +36,8 @@ export default {
     },
     computed:{
         isMidday: function(){
-            if(this.day >= 1 && this.day <= 5 && this.hour >= 9 && this.hour <= 15) return true;
+            if(this.day >= 1 && this.day <= 5 && 
+                ((this.hour >= 9 && this.hour <= 14) || (this.hour == 15 && this.minute < 30))) return true;
             else return false;
         }
     }

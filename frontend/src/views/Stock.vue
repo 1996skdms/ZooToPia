@@ -205,7 +205,7 @@ export default {
             this.hogaInterval = setInterval(() => {
                 if(this.intervalCheck == symbol) this.getRealTimeHogaMethod(symbol)
                 else clearInterval(this.hogaInterval)
-            }, 1500)
+            }, 1000)
         },
         async getRealTimeHogaMethod(symbol){
             let res = await stock.getRealTimeHoga(symbol)
@@ -219,8 +219,8 @@ export default {
             res.data.forEach((e) => {
                 this.askPrice[e.ordering - 1] = e.ask_price.substring(1, e.length)
                 this.askVolume[e.ordering - 1] = e.ask_volume
-                this.bidPrice[e.ordering - 1] = e.bid_price.substring(1, e.length)
-                this.bidVolume[e.ordering - 1] = e.bid_volume
+                this.bidPrice[10 - e.ordering] = e.bid_price.substring(1, e.length)
+                this.bidVolume[10 - e.ordering] = e.bid_volume
             })
         },
         async removeHoga(){

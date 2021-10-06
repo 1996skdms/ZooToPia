@@ -24,10 +24,13 @@ export default {
     data(){
         return{
             searchWord: "",
+            prevWord: "/",
         }
     },
     methods:{
         onOmit(){
+            if(this.searchWord == this.prevWord) return
+            this.prevWord = this.searchWord
             console.log(this.searchWord)
             this.$emit("searchStock", this.searchWord)
         },
