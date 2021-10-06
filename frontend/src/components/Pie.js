@@ -10,7 +10,9 @@ export default {
     this.renderChart(this.data, {
       borderWidth: "10px",
       hoverBackgroundColor: "red",
-      hoverBorderWidth: "10px"
+      hoverBorderWidth: "10px",
+      responsive: true,
+      maintainAspectRatio: false,
     });
   }
 };

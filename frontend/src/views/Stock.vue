@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="background-color:#07d4a43b; overflow: hidden;">
         <div class="row">
             <Sidebar></Sidebar>
         </div>
@@ -341,7 +341,7 @@ export default {
 .outer_box{
     margin-top: 130px;
     background-color: rgb(245, 250, 248);
-    border-radius: 0 15% 15% 0;
+    /* border-radius: 0 15% 15% 0; */
     border: white 1px solid;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -427,5 +427,6 @@ export default {
     padding-left: 120px;
     padding-top: 40px;
 }
+
 
 </style>

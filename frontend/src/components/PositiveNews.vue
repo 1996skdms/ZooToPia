@@ -3,7 +3,7 @@
         <p style="font-size: 24px;">긍정 뉴스</p>
         <p style="color: blue;">Positive</p>
         <ul>
-            <li :class="{'news_odd': i%2==1, 'news_even': i%2==0}" v-for="(item, i) in link" v-bind:key="item"><div class="info_title">뉴스{{i}}</div><p>&nbsp; <a :href="item" target="_blank">{{ positiveNews[i] }}</a> &nbsp; </p></li>
+            <li :class="{'news_odd': i%2==1, 'news_even': i%2==0}" v-for="(item, i) in link" v-bind:key="item"><div class="info_title"></div><p>&nbsp; <a :href="item" target="_blank">{{ positiveNews[i] }}</a> &nbsp; </p></li>
         </ul>
     </div>
 </template>
@@ -88,7 +88,7 @@ ul{
 }
 
 .news_odd{
-    background-color: aqua;
+    background-color: MediumSeaGreen;
 }
 
 .news_even{
