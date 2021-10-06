@@ -44,7 +44,7 @@
             </div>
             <div class="row word_cloud_chart">
                 <div class="word_cloud_position col-md-8">
-                    <word-cloud :data="defaultWords" :myColors="myColors"></word-cloud>
+                    <word-cloud style="transform: scale(1.3); width:110%; margin-left:-5%; margin-top: 5%;" :data="defaultWords" :myColors="myColors"></word-cloud>
                 </div>
                 <div class="chart_score_positon col-md-4">
                     <div class="pie_chart_box">
