@@ -29,13 +29,20 @@
 
             </div>
             
-            <div class="row outer_box" style="margin-top:50px; !important;">
+            <div v-if="isMidday" class="row outer_box" style="margin-top:50px; !important;">
                 <div class="row hoga_stage">
                 <div class="row col-md-3">
                     <HogaChart :ask="pieChartAsk" :bid="pieChartBid"></HogaChart>
                 </div>
                 <Hoga class="col-md-9" v-bind:askPrice="askPrice" :bidPrice="bidPrice" 
                 :askVolume="askVolume" :bidVolume="bidVolume"></Hoga>
+                </div>
+            </div>
+            <div v-else>
+                <div class="row outer_box" style="margin-top:40px; padding-left: 100px;">
+                    <div class="row" style="float:center; text-align:center; ">
+                        금일 주식장은 마감되었습니다
+                    </div>
                 </div>
             </div>
 
@@ -126,6 +133,10 @@ export default {
             stockToday: {},
             
             now: this.$moment(new Date()).format("DD MMM YYYY HH:mm:ss"),
+            
+            day: this.$moment().day(),
+            hour: this.$moment().hour(),
+            minute: this.$moment().minute(),
 
             askPrice: [],
             askVolume: [],
@@ -159,8 +170,6 @@ export default {
             this.searchWord = data.NAME
             
             this.stockProfile = data
-
-            // this.socketConnect()
             
             this.stockGraph(this.stockProfile.symbol)
 
@@ -204,10 +213,12 @@ export default {
             this.predict_stock_graph.date = res.data.date
         },
         async registerHoga(symbol){
+            if(!this.isMidday) return
             this.intervalCheck = symbol
             stock.registerHoga(symbol)
         },
         async getHoga(symbol){
+            if(!this.isMidday) return
             this.hogaInterval = setInterval(() => {
                 if(this.intervalCheck == symbol) this.getRealTimeHogaMethod(symbol)
                 else clearInterval(this.hogaInterval)
@@ -276,8 +287,8 @@ export default {
 
             return jo + ' ' + uk
         },
-        unLoadEvent(){
-            this.removeHoga()
+        async unLoadEvent(){
+            await this.removeHoga()
             console.log("unLoadEvent occured")
         },
     },
@@ -294,10 +305,6 @@ export default {
 
         await this.unLoadEvent()
         next()
-        // if (this.canLeaveSite) next();
-        // else if (confirm('이 사이트에서 나가시겠습니까?\n변경사항이 저장되지 않을 수 있습니다.')) {
-        // next();
-        // }
     },
     watch:{
         rateOfBidVolume(){
@@ -325,8 +332,13 @@ export default {
         },
         rateOfBidVolume(){
             return 100 - this.rateOfAskVolume;
+        },
+        isMidday: function(){
+            if(this.day >= 1 && this.day <= 5 && 
+                ((this.hour >= 9 && this.hour <= 14) || (this.hour == 15 && this.minute < 30))) return true;
+            else return false;
         }
-    }
+    },
 }
 </script>
 
