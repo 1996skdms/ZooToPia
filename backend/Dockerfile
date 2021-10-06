@@ -8,6 +8,10 @@ COPY ./requirements.txt /code/requirements.txt
 
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
+RUN apt-get update
+
+RUN apt-get install -y openjdk-8-jdk
+
 COPY ./root /code/root
 
 EXPOSE 8080
