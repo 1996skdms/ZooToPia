@@ -148,9 +148,10 @@ export default {
         async searchStock(searchWord){
             this.predict_stock_graph = {}
 
+            await this.removeHoga()
             let data = await this.getStockProfile(searchWord)
             this.searchWord = data.NAME
-
+            
             this.stockProfile = data
 
             // this.socketConnect()
@@ -159,7 +160,6 @@ export default {
 
             this.getToday(this.stockProfile.symbol)
 
-            await this.removeHoga()
             await this.registerHoga(this.stockProfile.symbol)
             this.getHoga(this.stockProfile.symbol)
 
@@ -226,7 +226,7 @@ export default {
         async removeHoga(){
             if(this.hogaInterval != null) clearInterval(this.hogaInterval)
             this.intervalCheck = false
-            await stock.removeHoga(this.stockProfile.symbol)
+            if(this.stockProfile.symbol != undefined) await stock.removeHoga(this.stockProfile.symbol)
         },
         async getToday(symbol){
             let res = await stock.getStockToday(symbol)
@@ -269,7 +269,11 @@ export default {
             uk = (Math.round((cash % 1000000000000) / 10000000) /10 )+ '억'
 
             return jo + ' ' + uk
-        }
+        },
+        unLoadEvent(){
+            this.removeHoga()
+            console.log("unLoadEvent occured")
+        },
     },
     mounted(){
         setInterval(() => {
@@ -277,7 +281,17 @@ export default {
         }, 1000)
 
         // this.searchStock("삼성전자") // 테스트
+        window.addEventListener('beforeunload', this.unLoadEvent);
+    },
+    async beforeRouteLeave(to, from, next) {
+        console.log("beforeRouteLeave", next)
 
+        await this.unLoadEvent()
+        next()
+        // if (this.canLeaveSite) next();
+        // else if (confirm('이 사이트에서 나가시겠습니까?\n변경사항이 저장되지 않을 수 있습니다.')) {
+        // next();
+        // }
     },
     watch:{
         rateOfBidVolume(){

@@ -18,7 +18,7 @@ class Kiwoom():
 
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.connect((host, port))  # , port
-        print("Server socket connected", host, port)
+        print("Server socket connected register", host, port)
         server_socket.sendall(byte_msg)
 
     def remove_hoga(self, symbol):
@@ -29,7 +29,7 @@ class Kiwoom():
 
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.connect((host, port))  # , port
-        print("Server socket connected", host, port)
+        print("Server socket connected remove", host, port)
         server_socket.sendall(byte_msg)
 
 
