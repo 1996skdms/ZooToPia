@@ -58,10 +58,10 @@
         <div v-if="isLoading" class="row PnN_news">
             <div class="row news">
                 <div class="news_list col-md-6">
-                    <PositiveNews :positiveNews="positiveTitle"></PositiveNews>
+                    <PositiveNews :positiveNews="positiveTitle" :link="positiveNews"></PositiveNews>
                 </div>
                 <div class="news_list col-md-6">
-                    <NegativeNews :negativeNews="negativeTitle"></NegativeNews>
+                    <NegativeNews :negativeNews="negativeTitle" :link="negativeNews"></NegativeNews>
                 </div>
             </div>
         </div>
@@ -343,8 +343,9 @@ export default {
 }
 
 .news_list{
-    display: inline;
+    display: inline-block;
     width : 49%;
+    height: 400px;
     border: 1px solid;
     margin: 0 5px;
     background-color: white;
