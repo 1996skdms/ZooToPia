@@ -34,9 +34,9 @@ def init_app():
 
 
     # 라우터
-    app.include_router(stock.router, prefix='/stock', tags=['stocks'])
-    app.include_router(news.router, prefix='/news', tags=['news'])
-    app.include_router(naver.router, prefix='/naver', tags=['navers'])
+    app.include_router(stock.router, prefix='/api/stock', tags=['stocks'])
+    app.include_router(news.router, prefix='/api/news', tags=['news'])
+    app.include_router(naver.router, prefix='/api/naver', tags=['navers'])
 
     return app
 
